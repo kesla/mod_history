@@ -18,23 +18,21 @@ breach.init(function () {
         tabState.entries.forEach(function (entry) {
           // win32 time to unix-time
           var timestamp = new Date(entry.timestamp % 8804332800000)
-              // entry.id reset on restart, so this will uniquely identify
-              // this entry - so taht we can filter potential duplicates
-            , id = tabId + '-' + entry.id
             , dir = __dirname + '/data/raw/' + timestamp.toJSON().slice(0, 10)
-            , filename = dir + '/' + timestamp.toJSON() + '-' + entry.id + '.json'
+            , filename = dir + '/' + timestamp.toJSON() + '.json'
+            , title = entry.title
 
-          mkdirp(dir, function () {
-            fs.writeFile(
-                filename
-              , JSON.stringify({
-                    url: entry.url.href
-                  , timestamp: timestamp
-                  , title: entry.title
-                  , id: id
-                })
-            )
-          })
+          if (entry.title && entry.title.length > 0)
+            mkdirp(dir, function () {
+              fs.writeFile(
+                  filename
+                , JSON.stringify({
+                      url: entry.url.href
+                    , timestamp: timestamp
+                    , title: entry.title
+                  })
+              )
+            })
 
         })
       })
