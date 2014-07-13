@@ -17,8 +17,9 @@ breach.init(function () {
 
         // win32 time to unix-time
         var timestamp = new Date(entry.timestamp % 8804332800000)
+          , id = entry.id
           , dir = __dirname + '/data/raw/' + timestamp.toJSON().slice(0, 10)
-          , filename = dir + '/' + timestamp.toJSON() + '.json'
+          , filename = dir + '/' + timestamp.toJSON() + '-' + id + '.json'
 
         mkdirp(dir, function () {
           fs.writeFile(
@@ -27,6 +28,7 @@ breach.init(function () {
                   url: entry.virtual_url
                 , timestamp: timestamp
                 , title: entry.title
+                , id: id
               })
           )
         })
