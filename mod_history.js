@@ -1,9 +1,10 @@
-var fs = require('fs')
-  , http = require('http')
+var http = require('http')
 
   , breach = require('breach_module')
-  , mkdirp = require('mkdirp')
+  , Medea = require('medea')
   , savedCache = require('lru-cache')({ max: 100 })
+
+  , db = new Medea()
 
   , bootstrap = function (port) {
       breach.init(function () {
@@ -32,16 +33,14 @@ var fs = require('fs')
             //  also, this means that the same file won't be saved multiple times
             if (entry.title && entry.title.length > 0 && !savedCache.has(id)) {
               savedCache.set(id, true)
-              mkdirp(dir, function () {
-                fs.writeFile(
-                    filename
-                  , JSON.stringify({
-                        url: entry.url.href
-                      , timestamp: timestamp
-                      , title: entry.title
-                    })
-                )
-              })
+              db.put(
+                  timestamp.getTime()
+                , JSON.stringify({
+                      url: entry.url.href
+                    , timestamp: timestamp
+                    , title: entry.title
+                  })
+              )
             }
 
           })
@@ -61,5 +60,9 @@ var fs = require('fs')
     })
 
 server.listen(0, function () {
-  bootstrap(server.address().port)
+  db.open(__dirname + '/data', function () {
+    db.compact(function () {
+      bootstrap(server.address().port)
+    })
+  })
 })
