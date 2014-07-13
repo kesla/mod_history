@@ -4,6 +4,7 @@
   "main": "./mod_history.js",
   "dependencies": {
     "breach_module": "0.3.x",
+    "lru-cache": "^2.5.0",
     "mkdirp": "^0.5.0"
   }
 }
