@@ -1,7 +1,11 @@
 var breach = require('breach_module')
-  , db = require('level')(
+  , levelup = require('levelup')
+  , db = levelup(
         __dirname + '/db'
-      , { valueEncoding: 'json' }
+      , {
+            db: require('leveldown')
+          , valueEncoding: 'json'
+        }
     )
   , getRange = require('level-get-range')(db)
 

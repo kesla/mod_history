@@ -4,7 +4,8 @@
   "main": "./mod_history.js",
   "dependencies": {
     "breach_module": "0.3.x",
-    "level": "^0.18.0",
-    "level-get-range": "^1.2.2"
+    "level-get-range": "^1.2.2",
+    "leveldown": "git://github.com/rvagg/node-leveldown#0.11-wip",
+    "levelup": "^0.18.5"
   }
 }
