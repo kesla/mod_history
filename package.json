@@ -1,0 +1,10 @@
+{
+  "name": "mod_history",
+  "version": "0.0.0",
+  "main": "./mod_history.js",
+  "dependencies": {
+    "breach_module": "0.3.x",
+    "level": "^0.18.0",
+    "level-get-range": "^1.2.2"
+  }
+}
