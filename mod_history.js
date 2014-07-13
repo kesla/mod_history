@@ -28,7 +28,7 @@ breach.init(function () {
             fs.writeFile(
                 filename
               , JSON.stringify({
-                    url: entry.virtual_url
+                    url: entry.url.href
                   , timestamp: timestamp
                   , title: entry.title
                   , id: id
