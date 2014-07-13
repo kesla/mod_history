@@ -1,10 +1,11 @@
 var http = require('http')
 
   , breach = require('breach_module')
-  , Medea = require('medea')
+  , level = require('level-packager')(require('medeadown'))
   , savedCache = require('lru-cache')({ max: 100 })
 
-  , db = new Medea()
+  , location = __dirname + '/data'
+  , db = level(location, { valueEncoding: 'json' })
 
   , bootstrap = function (port) {
       breach.init(function () {
@@ -35,11 +36,11 @@ var http = require('http')
               savedCache.set(id, true)
               db.put(
                   timestamp.getTime()
-                , JSON.stringify({
+                , {
                       url: entry.url.href
                     , timestamp: timestamp
                     , title: entry.title
-                  })
+                  }
               )
             }
 
@@ -60,8 +61,9 @@ var http = require('http')
     })
 
 server.listen(0, function () {
-  db.open(__dirname + '/data', function () {
-    db.compact(function () {
+  db.open(function () {
+    // db is levelup, db.db. is medeadown, db.db.db is medea
+    db.db.db.compact(function () {
       bootstrap(server.address().port)
     })
   })

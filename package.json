@@ -4,8 +4,9 @@
   "main": "./mod_history.js",
   "dependencies": {
     "breach_module": "0.3.x",
+    "level-packager": "^0.18.0",
     "lru-cache": "^2.5.0",
-    "medea": "0.0.7",
+    "medeadown": "^1.0.0",
     "mkdirp": "^0.5.0"
   }
 }
