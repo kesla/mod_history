@@ -1,13 +1,7 @@
-var breach = require('breach_module')
-  , levelup = require('levelup')
-  , db = levelup(
-        __dirname + '/db'
-      , {
-            db: require('leveldown')
-          , valueEncoding: 'json'
-        }
-    )
-  , getRange = require('level-get-range')(db)
+var fs = require('fs')
+
+  , breach = require('breach_module')
+  , mkdirp = require('mkdirp')
 
 breach.init(function () {
   breach.register('core', 'tabs:.*');
@@ -17,22 +11,25 @@ breach.init(function () {
     var loadingStates = Object.keys(state)
           .map(function (key) { return state[key] })
           .filter(function (obj) { return obj.loading }) || []
-      , batch = db.batch()
-
 
     loadingStates.forEach(function (state) {
       state.entries.forEach(function (entry) {
-        batch.put(
-            entry.timestamp
-          , entry
-        )
-      })
-    })
 
-    batch.write(function () {
-      console.log('yo, wrote some data')
-      getRange(function (err, range) {
-        console.log(JSON.stringify(range, null, '\t'))
+        // win32 time to unix-time
+        var timestamp = new Date(entry.timestamp % 8804332800000)
+          , dir = __dirname + '/data/raw/' + timestamp.toJSON().slice(0, 10)
+          , filename = dir + '/' + timestamp.toJSON() + '.json'
+
+        mkdirp(dir, function () {
+          fs.writeFile(
+              filename
+            , JSON.stringify({
+                  url: entry.virtual_url
+                , timestamp: timestamp
+                , title: entry.title
+              })
+          )
+        })
       })
     })
 
